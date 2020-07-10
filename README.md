@@ -2,7 +2,25 @@
 
 This project is WIP and should not be used in production.
 
-A  Swift package as client for [Google Cloud Datastore](https://cloud.google.com/datastore).
+A Swift package as client for [Google Cloud Datastore](https://cloud.google.com/datastore).
+
+## Features
+
+| Feature                    | Implemented |
+|:---------------------------|:------------|
+| Namespaces                 | ✅          |
+| Get                        | ✅          |
+| Put                        | ✅          |
+| Delete                     | ❌           |
+| Allocate/Reserve IDs       | ❌           |
+| Transactions               | ❌           |
+| Query                      | ✅          |
+| Query - Cursors            | ❌           |
+| Query - Projection         | ❌           |
+| Query - Distinct on        | ❌           |
+| Traces                     | ❌           |
+| Logging                    | ❌           |
+| GQL                        | ❌           |
 
 ## Development
 
