@@ -19,8 +19,9 @@ class TetsCase: XCTestCase {
         _ = client
 
         // Clean up datastore all test-entities
-        let users = User.query().getAll()
+        let users = try! User.query().getAll().wait()
+        try! users.map({ $0.key }).deleteAll().wait()
 
-        // TODO: Implement
+        sleep(1)
     }
 }
