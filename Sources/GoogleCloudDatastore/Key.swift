@@ -36,7 +36,7 @@ extension Key where Parent: Key {
 
 extension Key where Parent == Void {
 
-    static func == (lhs: Self, rhs: Self) -> Bool {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.id == rhs.id && lhs.namespace == rhs.namespace
     }
 }
@@ -126,7 +126,7 @@ extension Key {
     }
 
     /// Default implementation of `PropertyValue`. Do not overwrite or call directly.
-    init(_gcdValue: _RawPropertyValue) throws {
+    public init(_gcdValue: _RawPropertyValue) throws {
         switch (_gcdValue as! Google_Datastore_V1_Value.OneOf_ValueType) {
         case .keyValue(let key):
             self.init(raw: key)
