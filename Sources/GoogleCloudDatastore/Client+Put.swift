@@ -39,7 +39,7 @@ extension Entity where Key: GoogleCloudDatastore.Key {
 
 extension Array where Element: Entity, Element.Key: GoogleCloudDatastore.Key {
 
-    public mutating func putAll(client: Client = .default) -> EventLoopFuture<Void> {
+    public func putAll(client: Client = .default) -> EventLoopFuture<Void> {
         client.putAll(entities: self)
     }
 }
