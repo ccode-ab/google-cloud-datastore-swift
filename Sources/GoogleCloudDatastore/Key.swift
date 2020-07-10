@@ -1,4 +1,4 @@
-public protocol Key: Equatable, PropertyValue {
+public protocol Key: PropertyValue, FilterOperationComparableType, FilterOperationKeyableType {
 
     associatedtype Parent
 
@@ -72,6 +72,11 @@ extension Key where Parent == Void {
     public static var emptyPropertyValue: Self {
         Self.init(id: .incomplete, parent: (), namespace: .default)
     }
+
+    /// Default implementation of `PropertyValue`. Do not overwrite or call directly.
+    public static var _gcdtc: Self {
+        Self.init(id: .uniq(1))
+    }
 }
 
 extension Key where Parent: Key {
@@ -89,6 +94,11 @@ extension Key where Parent: Key {
     /// Default implementation of `PropertyValue`. Do not overwrite or call directly.
     public static var emptyPropertyValue: Self {
         Self.init(id: .incomplete, parent: Parent.emptyPropertyValue, namespace: .default)
+    }
+
+    /// Default implementation of `PropertyValue`. Do not overwrite or call directly.
+    public static var _gcdtc: Self {
+        Self.init(id: .uniq(1), parent: ._gcdtc)
     }
 }
 

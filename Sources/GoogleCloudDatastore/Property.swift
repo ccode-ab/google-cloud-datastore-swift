@@ -6,12 +6,13 @@ public enum PropertyValueDecodeError: Error {
     case parse(Any)
 }
 
-public protocol PropertyValue: CustomDebugStringConvertible {
+public protocol PropertyValue: Equatable, CustomDebugStringConvertible {
 
     init(_gcdValue: _RawPropertyValue) throws
     func _gcdValue() -> _RawPropertyValue
 
     static var emptyPropertyValue: Self { get }
+    static var _gcdtc: Self { get }
 }
 
 public protocol _RawPropertyValue {}
@@ -76,6 +77,11 @@ extension Optional: PropertyValue where Wrapped: PropertyValue {
     }
 
     /// Default implementation of `PropertyValue`. Do not overwrite or call directly.
+    public static var _gcdtc: Wrapped? {
+        .some(._gcdtc)
+    }
+
+    /// Default implementation of `PropertyValue`. Do not overwrite or call directly.
     public func _gcdValue() -> _RawPropertyValue {
         switch self {
         case .none:
@@ -101,6 +107,11 @@ extension Array: PropertyValue where Element: PropertyValue {
     /// Default implementation of `PropertyValue`. Do not overwrite or call directly.
     public static var emptyPropertyValue: [Element] {
         []
+    }
+
+    /// Default implementation of `PropertyValue`. Do not overwrite or call directly.
+    public static var _gcdtc: [Element] {
+        [._gcdtc]
     }
 
     /// Default implementation of `PropertyValue`. Do not overwrite or call directly.
@@ -132,6 +143,11 @@ extension Bool: PropertyValue {
     /// Default implementation of `PropertyValue`. Do not overwrite or call directly.
     public static var emptyPropertyValue: Bool {
         false
+    }
+
+    /// Default implementation of `PropertyValue`. Do not overwrite or call directly.
+    public static var _gcdtc: Bool {
+        true
     }
 
     /// Default implementation of `PropertyValue`. Do not overwrite or call directly.
@@ -177,6 +193,11 @@ extension Int64: PropertyValue {
     /// Default implementation of `PropertyValue`. Do not overwrite or call directly.
     public static var emptyPropertyValue: Int64 {
         0
+    }
+
+    /// Default implementation of `PropertyValue`. Do not overwrite or call directly.
+    public static var _gcdtc: Int64 {
+        1
     }
 
     /// Default implementation of `PropertyValue`. Do not overwrite or call directly.
@@ -229,6 +250,11 @@ extension Double: PropertyValue {
     }
 
     /// Default implementation of `PropertyValue`. Do not overwrite or call directly.
+    public static var _gcdtc: Double {
+        1
+    }
+
+    /// Default implementation of `PropertyValue`. Do not overwrite or call directly.
     public func _gcdValue() -> _RawPropertyValue {
         Google_Datastore_V1_Value.OneOf_ValueType.doubleValue(self)
     }
@@ -274,6 +300,11 @@ extension String: PropertyValue {
     }
 
     /// Default implementation of `PropertyValue`. Do not overwrite or call directly.
+    public static var _gcdtc: String {
+        "1"
+    }
+
+    /// Default implementation of `PropertyValue`. Do not overwrite or call directly.
     public func _gcdValue() -> _RawPropertyValue {
         Google_Datastore_V1_Value.OneOf_ValueType.stringValue(self)
     }
@@ -312,6 +343,11 @@ extension Date: PropertyValue {
     /// Default implementation of `PropertyValue`. Do not overwrite or call directly.
     public static var emptyPropertyValue: Date {
         Date(timeIntervalSince1970: 0)
+    }
+
+    /// Default implementation of `PropertyValue`. Do not overwrite or call directly.
+    public static var _gcdtc: Date {
+        Date(timeIntervalSince1970: 1)
     }
 
     /// Default implementation of `PropertyValue`. Do not overwrite or call directly.
@@ -354,8 +390,14 @@ extension Date: PropertyValue {
 
 extension Data: PropertyValue {
 
+    /// Default implementation of `PropertyValue`. Do not overwrite or call directly.
     public static var emptyPropertyValue: Data {
         Data()
+    }
+
+    /// Default implementation of `PropertyValue`. Do not overwrite or call directly.
+    public static var _gcdtc: Data {
+        Data(repeating: 1, count: 1)
     }
 
     /// Default implementation of `PropertyValue`. Do not overwrite or call directly.

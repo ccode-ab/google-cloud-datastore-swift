@@ -1,19 +1,14 @@
 import XCTest
 @testable import GoogleCloudDatastore
 
-// Using `_Test_`-prefix for kinds just in case someone would run tests against production.
+// Using `Testttt`-prefix for kinds just in case someone would run tests against production.
 // Running tests deletes all data before test is executed.
-
-let allKeyKinds: [String] = [
-    "_Test_User",
-    "_Test_Access",
-]
 
 // MARK: - User
 
 struct UserKey: Key {
 
-    static let kind: String = "_Test_User"
+    static let kind: String = "TesttttUser"
     let id: ID
     let parent: Void
     let namespace: Namespace
@@ -37,7 +32,7 @@ final class User: Entity {
 
 struct AccessKey: Key {
 
-    static let kind: String = "_Test_Access"
+    static let kind: String = "TesttttAccess"
     let id: ID
     let parent: UserKey
     let namespace: Namespace

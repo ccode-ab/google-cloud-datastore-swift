@@ -10,7 +10,7 @@ class TetsCase: XCTestCase {
     private(set) lazy var client = try! Client.make(configuration: .init(
         projectID: "testing",
         insecureHost: "localhost:8081"
-    ), group: eventLoopGroup).wait()
+        ), group: eventLoopGroup).wait()
 
     override func setUp() {
         super.setUp()
@@ -19,8 +19,8 @@ class TetsCase: XCTestCase {
         _ = client
 
         // Clean up datastore all test-entities
-        for kind in allKeyKinds {
-            // TODO: Implement
-        }
+        let users = User.query().getAll()
+
+        // TODO: Implement
     }
 }
