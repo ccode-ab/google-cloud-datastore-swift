@@ -13,7 +13,7 @@ let allKeyKinds: [String] = [
 
 struct UserKey: Key {
 
-    let kind: String = "_Test_User"
+    static let kind: String = "_Test_User"
     let id: ID
     let parent: Void
     let namespace: Namespace
@@ -37,7 +37,7 @@ final class User: Entity {
 
 struct AccessKey: Key {
 
-    let kind: String = "_Test_Access"
+    static let kind: String = "_Test_Access"
     let id: ID
     let parent: UserKey
     let namespace: Namespace

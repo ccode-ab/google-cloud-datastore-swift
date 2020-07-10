@@ -2,7 +2,7 @@ public protocol Key: Equatable, PropertyValue {
 
     associatedtype Parent
 
-    var kind: String { get }
+    static var kind: String { get }
     var id: ID { get }
     var parent: Parent { get }
     var namespace: Namespace { get }
@@ -37,7 +37,7 @@ extension Key where Parent: Key {
 extension Key where Parent == Void {
 
     static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.id == rhs.id && lhs.kind == rhs.kind && lhs.namespace == rhs.namespace
+        lhs.id == rhs.id && lhs.namespace == rhs.namespace
     }
 }
 
@@ -98,7 +98,7 @@ extension Key {
 
     fileprivate var rawElement: Google_Datastore_V1_Key.PathElement {
         Google_Datastore_V1_Key.PathElement.with {
-            $0.kind = kind
+            $0.kind = Self.kind
             $0.idType = id.raw
         }
     }
@@ -146,13 +146,13 @@ extension Key where Parent: Key {
 extension Key where Parent == Void {
 
     public var debugDescription: String {
-        "/\(namespace.rawValue):\(kind):\(id)"
+        "/\(namespace.rawValue):\(Self.kind):\(id)"
     }
 }
 
 extension Key where Parent: Key {
 
     public var debugDescription: String {
-        "\(parent.debugDescription)\(kind)"
+        "\(parent.debugDescription)\(Self.kind)"
     }
 }

@@ -18,7 +18,7 @@ extension Client {
             for (index, result) in response.mutationResults.enumerated() {
                 guard result.hasKey
                     else { continue }
-                
+
                 let entity = entities[index]
                 entity.key = type(of: entity.key).init(
                     id: ID(raw: result.key.path.last!.idType!),
