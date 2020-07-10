@@ -11,7 +11,7 @@ A Swift package as client for [Google Cloud Datastore](https://cloud.google.com/
 | Namespaces                 | ✅          |
 | Get                        | ✅          |
 | Put                        | ✅          |
-| Delete                     | ❌           |
+| Delete                     | ✅          |
 | Allocate/Reserve IDs       | ❌           |
 | Transactions               | ❌           |
 | Query                      | ✅          |

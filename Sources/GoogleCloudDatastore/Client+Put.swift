@@ -11,7 +11,7 @@ extension Client {
                     $0.operation = .upsert(entity.raw as! Google_Datastore_V1_Entity)
                 }
             }
-            $0.mode =  .nonTransactional
+            $0.mode = .nonTransactional
         }
 
         return raw.commit(request).response.map { response in
