@@ -7,6 +7,7 @@ final class IDTests: TetsCase {
         ("testCodableUniq", testCodableUniq),
         ("testCodableNamed", testCodableNamed),
         ("testCodableIncomplete", testCodableIncomplete),
+        ("testCustomDebugStringConvertible", testCustomDebugStringConvertible),
     ]
 
     // MARK: - Codable
@@ -33,5 +34,13 @@ final class IDTests: TetsCase {
 
         let decodedID = try JSONDecoder().decode(ID.self, from: data)
         XCTAssertEqual(encodedID, decodedID, "IDs should be equal after encode and decode")
+    }
+
+    // MARK: - CustomDebugStringConvertible
+
+    func testCustomDebugStringConvertible() {
+        XCTAssertEqual("123", ID.uniq(123).debugDescription)
+        XCTAssertEqual("\"123\"", ID.named("123").debugDescription)
+        XCTAssertEqual("<incomplete>", ID.incomplete.debugDescription)
     }
 }
