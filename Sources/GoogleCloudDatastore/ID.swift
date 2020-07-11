@@ -1,6 +1,8 @@
+import Foundation
+
 /// Identifier for `Key`.
 /// Can be an auto-allocated number ID, a named string ID or incomplete, future to be number ID.
-public enum ID: Equatable, CustomDebugStringConvertible {
+public enum ID: Equatable, CustomDebugStringConvertible, Codable {
 
     /// Auto-allocated ID of a entity.
     /// Never equal to zero. Values less than zero are discouraged and may not be supported in the future.
@@ -16,6 +18,8 @@ public enum ID: Equatable, CustomDebugStringConvertible {
     /// When put into the datastore, the id of the entity is auto-allocated to an `.uniq(_)`.
     /// A parent key must not have a incomplete key.
     case incomplete
+
+    // MARK: - gRPC Coding
 
     init(raw: Google_Datastore_V1_Key.PathElement.OneOf_IDType?) {
         switch raw {
@@ -36,6 +40,30 @@ public enum ID: Equatable, CustomDebugStringConvertible {
             return .name(name)
         case .incomplete:
             return nil
+        }
+    }
+
+    // MARK: - Codable
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        switch self {
+        case .uniq(let id):
+            try container.encode(id)
+        case .named(let id):
+            try container.encode(id)
+        case .incomplete:
+            try container.encode(Data())
+        }
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        do {
+            self = .uniq(try container.decode(Int64.self))
+        } catch {
+            let named = try container.decode(String.self)
+            self = named.isEmpty ? .incomplete : .named(named)
         }
     }
 
