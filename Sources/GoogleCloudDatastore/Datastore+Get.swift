@@ -6,7 +6,13 @@ extension Datastore {
     /// Lookups the entities for the given keys.
     /// - Parameter keys: Keys representing the entities to lookup.
     /// - Returns: Future result with entities. Entities that was not found is `nil`.
-    public func getAll<Entity>(_ keys: [Entity.Key]) -> EventLoopFuture<[Entity?]> where Entity: GoogleCloudDatastore.Entity, Entity.Key: Key {
+    public func getAll<Entity>(_ keys: [Entity.Key]) -> EventLoopFuture<[Entity?]>
+    where
+        Entity: GoogleCloudDatastore.Entity,
+        Entity.Key: GoogleCloudDatastore.Key,
+        Entity.Key.Entity == Entity
+    {
+
         let request = Google_Datastore_V1_LookupRequest.with {
             $0.projectID = driver.projectID
             $0.keys = keys.map({ $0.raw })
@@ -35,7 +41,12 @@ extension Datastore {
     /// Lookups the entitiy for the given key.
     /// - Parameter key: Key representing the entity to lookup.
     /// - Returns: Future result with the entity or `nil` if the entitiy was not found.
-    public func get<Entity>(_ key: Entity.Key) -> EventLoopFuture<Entity?> where Entity: GoogleCloudDatastore.Entity, Entity.Key: Key {
+    public func get<Entity>(_ key: Entity.Key) -> EventLoopFuture<Entity?>
+    where
+        Entity: GoogleCloudDatastore.Entity,
+        Entity.Key: GoogleCloudDatastore.Key,
+        Entity.Key.Entity == Entity
+    {
         getAll([key]).map { $0[0] }
     }
 }

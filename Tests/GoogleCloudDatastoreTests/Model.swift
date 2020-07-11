@@ -8,6 +8,8 @@ import XCTest
 
 struct UserKey: Key {
 
+    typealias Entity = User
+
     static let kind: String = "TesttttUser"
     let id: ID
     let parent: Void
@@ -16,11 +18,9 @@ struct UserKey: Key {
 
 final class User: Entity {
 
-    typealias Key = UserKey
+    var key: UserKey
 
-    var key: Key
-
-    init(key: Key) {
+    init(key: UserKey) {
         self.key = key
     }
 
@@ -32,6 +32,8 @@ final class User: Entity {
 
 struct AccessKey: Key {
 
+    typealias Entity = Access
+
     static let kind: String = "TesttttAccess"
     let id: ID
     let parent: UserKey
@@ -40,11 +42,9 @@ struct AccessKey: Key {
 
 final class Access: Entity {
 
-    typealias Key = AccessKey
+    var key: AccessKey
 
-    var key: Key
-
-    init(key: Key) {
+    init(key: AccessKey) {
         self.key = key
     }
 }

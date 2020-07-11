@@ -1,6 +1,7 @@
 public protocol Key: PropertyValue, FilterOperationComparableType, FilterOperationKeyableType {
 
     associatedtype Parent
+    associatedtype Entity
 
     static var kind: String { get }
     var id: ID { get }
