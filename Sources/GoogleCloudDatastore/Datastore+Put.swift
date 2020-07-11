@@ -1,14 +1,14 @@
 import GRPC
 import NIO
 
-extension Client {
+extension Datastore {
 
     /// Creates or updates given entities.  Also updates the key for entities where the key is incomplete.
     /// - Parameter entities: Entities to create or update.
     /// - Returns: Future result.
     public func putAll<Entity>(_ entities: [Entity]) -> EventLoopFuture<Void> where Entity: GoogleCloudDatastore.Entity, Entity.Key: Key {
         let request = Google_Datastore_V1_CommitRequest.with {
-            $0.projectID = datastore.projectID
+            $0.projectID = driver.projectID
             $0.mutations = entities.map { entity in
                 Google_Datastore_V1_Mutation.with {
                     $0.operation = .upsert(entity.raw as! Google_Datastore_V1_Entity)
@@ -17,7 +17,7 @@ extension Client {
             $0.mode = .nonTransactional
         }
 
-        return datastore.raw
+        return driver.raw
             .commit(request)
             .response
             .hop(to: eventLoop)

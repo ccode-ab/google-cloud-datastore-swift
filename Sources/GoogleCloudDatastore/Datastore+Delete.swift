@@ -1,14 +1,14 @@
 import GRPC
 import NIO
 
-extension Client {
+extension Datastore {
 
     /// Deletes the entities for the given keys.
     /// - Parameter keys: Keys representing the entities to delete.
     /// - Returns: Future result.
     public func deleteAll<Key>(_ keys: [Key]) -> EventLoopFuture<Void> where Key: GoogleCloudDatastore.Key {
         let request = Google_Datastore_V1_CommitRequest.with {
-            $0.projectID = datastore.projectID
+            $0.projectID = driver.projectID
             $0.mutations = keys.map { key in
                 Google_Datastore_V1_Mutation.with {
                     $0.operation = .delete(key.raw)
@@ -17,7 +17,7 @@ extension Client {
             $0.mode = .nonTransactional
         }
 
-        return datastore.raw
+        return driver.raw
             .commit(request)
             .response
             .hop(to: eventLoop)

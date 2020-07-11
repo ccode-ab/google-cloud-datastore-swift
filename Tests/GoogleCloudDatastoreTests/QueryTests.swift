@@ -21,13 +21,13 @@ final class QueryTests: TetsCase {
             let user2 = User(id: id2)
             user2.email = email2
 
-            try client.putAll([user1, user2]).wait()
+            try datastore.putAll([user1, user2]).wait()
             sleep(1)
         }
 
         // Test
         do {
-            let users = try client.query(User.self).getAll().wait()
+            let users = try datastore.query(User.self).getAll().wait()
             XCTAssertEqual(users.count, 2, "Number of uers in datastore is incorrect")
 
             let user1 = try XCTUnwrap(users.first, "User 1 does not exist")
@@ -52,13 +52,13 @@ final class QueryTests: TetsCase {
             let user2 = User(id: id2)
             user2.email = email2
 
-            try client.putAll([user1, user2]).wait()
+            try datastore.putAll([user1, user2]).wait()
             sleep(1)
         }
 
         // Test
         do {
-            let users = try client.query(User.self)
+            let users = try datastore.query(User.self)
                 .where(\.email, .equals(email2))
                 .getAll()
                 .wait()

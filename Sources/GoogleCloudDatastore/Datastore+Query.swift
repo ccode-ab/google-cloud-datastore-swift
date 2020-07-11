@@ -5,7 +5,7 @@ import NIO
 
 public struct Query<Entity: GoogleCloudDatastore.Entity> {
 
-    let client: Client
+    let client: Datastore
     let namespace: Namespace
 
     var mirrorableEntity: Entity
@@ -24,7 +24,7 @@ public struct Query<Entity: GoogleCloudDatastore.Entity> {
     }
 }
 
-extension Client {
+extension Datastore {
 
     public func query<Entity>(_ type: Entity.Type, namespace: Namespace = .default) -> Query<Entity> where Entity: GoogleCloudDatastore.Entity, Entity.Key: GoogleCloudDatastore.Key {
         Query(client: self, namespace: namespace, mirrorableEntity: Entity.init(key: .emptyPropertyValue))
@@ -180,7 +180,7 @@ extension Query where Entity.Key: GoogleCloudDatastore.Key {
 
     public func getAll(limit: Int32? = nil) -> EventLoopFuture<[Entity]> {
         let request = Google_Datastore_V1_RunQueryRequest.with {
-            $0.projectID = client.datastore.projectID
+            $0.projectID = client.driver.projectID
             $0.partitionID = .with {
                 $0.namespaceID = namespace.rawValue
             }
@@ -214,7 +214,7 @@ extension Query where Entity.Key: GoogleCloudDatastore.Key {
             })
         }
 
-        return client.datastore.raw
+        return client.driver.raw
             .runQuery(request)
             .response
             .hop(to: client.eventLoop)

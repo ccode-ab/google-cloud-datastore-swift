@@ -14,7 +14,7 @@ final class GetTests: TetsCase {
 
         // Pre-conditions
         do {
-            let user: User? = try client.get(UserKey(id: id)).wait()
+            let user: User? = try datastore.get(UserKey(id: id)).wait()
             XCTAssertNil(user, "User should not exist before test")
         }
 
@@ -23,12 +23,12 @@ final class GetTests: TetsCase {
             let user = User(id: id)
             user.email = email
 
-            try client.put(user).wait()
+            try datastore.put(user).wait()
         }
 
         // Test
         do {
-            let userMaybe: User? = try client.get(UserKey(id: id)).wait()
+            let userMaybe: User? = try datastore.get(UserKey(id: id)).wait()
 
             let user = try XCTUnwrap(userMaybe, "User does not exist")
             XCTAssertEqual(user.email, email, "User email is incorrect")
@@ -40,7 +40,7 @@ final class GetTests: TetsCase {
 
         // Test
         do {
-            let userMaybe: User? = try client.get(UserKey(id: id)).wait()
+            let userMaybe: User? = try datastore.get(UserKey(id: id)).wait()
             XCTAssertNil(userMaybe, "User should not exist")
         }
     }

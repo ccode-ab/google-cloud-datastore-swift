@@ -16,19 +16,19 @@ final class DeleteTests: TetsCase {
             let user = User(id: id)
             user.email = email
 
-            try client.put(user).wait()
+            try datastore.put(user).wait()
             sleep(1)
         }
 
         // Test
         do {
-            try client.delete(UserKey(id: id)).wait()
+            try datastore.delete(UserKey(id: id)).wait()
             sleep(1)
         }
 
         // Post-conditions
         do {
-            let userMaybe: User? = try client.get(UserKey(id: id)).wait()
+            let userMaybe: User? = try datastore.get(UserKey(id: id)).wait()
             XCTAssertNil(userMaybe, "User has not been deleted")
         }
     }

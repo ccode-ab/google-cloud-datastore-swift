@@ -1,18 +1,18 @@
 import GRPC
 import NIO
 
-extension Client {
+extension Datastore {
 
     /// Lookups the entities for the given keys.
     /// - Parameter keys: Keys representing the entities to lookup.
     /// - Returns: Future result with entities. Entities that was not found is `nil`.
     public func getAll<Entity>(_ keys: [Entity.Key]) -> EventLoopFuture<[Entity?]> where Entity: GoogleCloudDatastore.Entity, Entity.Key: Key {
         let request = Google_Datastore_V1_LookupRequest.with {
-            $0.projectID = datastore.projectID
+            $0.projectID = driver.projectID
             $0.keys = keys.map({ $0.raw })
         }
 
-        return datastore.raw
+        return driver.raw
             .lookup(request)
             .response
             .hop(to: eventLoop)
