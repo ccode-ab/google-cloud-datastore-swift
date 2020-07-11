@@ -1,7 +1,7 @@
 import XCTest
 @testable import GoogleCloudDatastore
 
-final class IDTests: TetsCase {
+final class IDTests: XCTestCase {
 
     static var allTests: [(String, (IDTests) -> () throws -> ())] = [
         ("testCodableUniq", testCodableUniq),

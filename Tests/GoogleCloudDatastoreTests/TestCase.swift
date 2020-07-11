@@ -3,7 +3,7 @@ import Foundation
 import XCTest
 @testable import GoogleCloudDatastore
 
-class TetsCase: XCTestCase {
+class DatastoreTestCase: XCTestCase {
 
     let eventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: 1)
 

@@ -1,7 +1,7 @@
 import XCTest
 @testable import GoogleCloudDatastore
 
-final class DeleteTests: TetsCase {
+final class DeleteTests: DatastoreTestCase {
 
     static var allTests: [(String, (DeleteTests) -> () throws -> ())] = [
         ("testDeleteExisting", testDeleteExisting),

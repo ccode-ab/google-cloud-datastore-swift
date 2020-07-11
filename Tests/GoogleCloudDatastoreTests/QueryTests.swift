@@ -1,7 +1,7 @@
 import XCTest
 @testable import GoogleCloudDatastore
 
-final class QueryTests: TetsCase {
+final class QueryTests: DatastoreTestCase {
 
     static var allTests: [(String, (QueryTests) -> () throws -> ())] = [
         ("testQueryAll", testQueryAll),
