@@ -12,4 +12,10 @@ public final class Datastore {
         self.driver = driver
         self.eventLoop = eventLoop
     }
+
+    // MARK: -
+
+    public static func `default`(on eventLoop: EventLoop) -> Datastore {
+        Driver.default.datastore(on: eventLoop)
+    }
 }
