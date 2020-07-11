@@ -7,20 +7,21 @@ class TetsCase: XCTestCase {
 
     let eventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: 1)
 
-    private(set) lazy var client = try! Client.make(configuration: .init(
+    private(set) lazy var datastore = try! Datastore.bootstrap(configuration: .init(
         projectID: "testing",
         insecureHost: "localhost:8081"
-        ), group: eventLoopGroup).wait()
+    ), group: eventLoopGroup).wait()
+
+    private(set) var client: Client!
 
     override func setUp() {
         super.setUp()
 
-        // Warmup default client
-        _ = client
+        client = datastore.client(on: eventLoopGroup.next())
 
-        // Clean up datastore all test-entities
-        let users = try! User.query().getAll().wait()
-        try! users.map({ $0.key }).deleteAll().wait()
+        // Delete datastore test-entities
+        let users = try! client.query(User.self).getAll().wait()
+        try! client.deleteAll(users).wait()
 
         sleep(1)
     }

@@ -16,12 +16,12 @@ final class PutTests: TetsCase {
             let user = User(id: id)
             user.email = email
 
-            try user.put().wait()
+            try client.put(user).wait()
         }
 
         // Post-conditions
         do {
-            let userMaybe: User? = try UserKey(id: id).get().wait()
+            let userMaybe: User? = try client.get(UserKey(id: id)).wait()
 
             let user = try XCTUnwrap(userMaybe, "User does not exist after put")
             XCTAssertEqual(user.email, email, "User email is incorrect")

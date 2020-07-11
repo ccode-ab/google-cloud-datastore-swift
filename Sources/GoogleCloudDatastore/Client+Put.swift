@@ -3,9 +3,12 @@ import NIO
 
 extension Client {
 
-    fileprivate func putAll<Entity>(entities: [Entity]) -> EventLoopFuture<Void> where Entity: GoogleCloudDatastore.Entity, Entity.Key: Key {
+    /// Creates or updates given entities.  Also updates the key for entities where the key is incomplete.
+    /// - Parameter entities: Entities to create or update.
+    /// - Returns: Future result.
+    public func putAll<Entity>(_ entities: [Entity]) -> EventLoopFuture<Void> where Entity: GoogleCloudDatastore.Entity, Entity.Key: Key {
         let request = Google_Datastore_V1_CommitRequest.with {
-            $0.projectID = projectID
+            $0.projectID = datastore.projectID
             $0.mutations = entities.map { entity in
                 Google_Datastore_V1_Mutation.with {
                     $0.operation = .upsert(entity.raw as! Google_Datastore_V1_Entity)
@@ -14,32 +17,29 @@ extension Client {
             $0.mode = .nonTransactional
         }
 
-        return raw.commit(request).response.map { response in
-            for (index, result) in response.mutationResults.enumerated() {
-                guard result.hasKey
-                    else { continue }
+        return datastore.raw
+            .commit(request)
+            .response
+            .hop(to: eventLoop)
+            .map { response in
+                for (index, result) in response.mutationResults.enumerated() {
+                    guard result.hasKey
+                        else { continue }
 
-                let entity = entities[index]
-                entity.key = type(of: entity.key).init(
-                    id: ID(raw: result.key.path.last!.idType!),
-                    parent: entity.key.parent,
-                    namespace: entity.key.namespace
-                )
+                    let entity = entities[index]
+                    entity.key = type(of: entity.key).init(
+                        id: ID(raw: result.key.path.last!.idType!),
+                        parent: entity.key.parent,
+                        namespace: entity.key.namespace
+                    )
+                }
             }
-        }
     }
-}
 
-extension Entity where Key: GoogleCloudDatastore.Key {
-
-    public func put(client: Client = .default) -> EventLoopFuture<Void> {
-        client.putAll(entities: [self])
-    }
-}
-
-extension Array where Element: Entity, Element.Key: GoogleCloudDatastore.Key {
-
-    public func putAll(client: Client = .default) -> EventLoopFuture<Void> {
-        client.putAll(entities: self)
+    /// Creates or updates given entity.  Also updates the key if the entity's  key is incomplete.
+    /// - Parameter entity: Entity to create or update.
+    /// - Returns: Future result.
+    public func put<Entity>(_ entity: Entity) -> EventLoopFuture<Void> where Entity: GoogleCloudDatastore.Entity, Entity.Key: Key {
+        putAll([entity])
     }
 }

@@ -3,9 +3,12 @@ import NIO
 
 extension Client {
 
-    fileprivate func deleteAll<Key>(keys: [Key]) -> EventLoopFuture<Void> where Key: GoogleCloudDatastore.Key {
+    /// Deletes the entities for the given keys.
+    /// - Parameter keys: Keys representing the entities to delete.
+    /// - Returns: Future result.
+    public func deleteAll<Key>(_ keys: [Key]) -> EventLoopFuture<Void> where Key: GoogleCloudDatastore.Key {
         let request = Google_Datastore_V1_CommitRequest.with {
-            $0.projectID = projectID
+            $0.projectID = datastore.projectID
             $0.mutations = keys.map { key in
                 Google_Datastore_V1_Mutation.with {
                     $0.operation = .delete(key.raw)
@@ -14,26 +17,31 @@ extension Client {
             $0.mode = .nonTransactional
         }
 
-        return raw.commit(request).response.map { _ in () }
+        return datastore.raw
+            .commit(request)
+            .response
+            .hop(to: eventLoop)
+            .map { _ in () }
     }
-}
-
-extension Key {
 
     /// Deletes the entity for the given key.
-    /// - Parameter client: The client to use for operation.
+    /// - Parameter key: Key representing the entity to delete.
     /// - Returns: Future result.
-    public func delete(client: Client = .default) -> EventLoopFuture<Void> {
-        client.deleteAll(keys: [self])
+    public func delete<Key>(_ key: Key) -> EventLoopFuture<Void> where Key: GoogleCloudDatastore.Key {
+        deleteAll([key])
     }
-}
 
-extension Array where Element: Key {
-
-    /// Deletes the entities for the given keys.
-    /// - Parameter client: The client to use for operation.
+    /// Deletes the given entities.
+    /// - Parameter entities: Entities to delete.
     /// - Returns: Future result.
-    public func deleteAll(client: Client = .default) -> EventLoopFuture<Void> {
-        client.deleteAll(keys: self)
+    public func deleteAll<Entity>(_ entities: [Entity]) -> EventLoopFuture<Void> where Entity: GoogleCloudDatastore.Entity, Entity.Key: GoogleCloudDatastore.Key {
+        deleteAll(entities.map({ $0.key}))
+    }
+
+    /// Deletes the given entity.
+    /// - Parameter entity: Entity to delete.
+    /// - Returns: Future result.
+    public func delete<Entity>(_ entity: Entity) -> EventLoopFuture<Void> where Entity: GoogleCloudDatastore.Entity, Entity.Key: GoogleCloudDatastore.Key {
+        delete(entity.key)
     }
 }

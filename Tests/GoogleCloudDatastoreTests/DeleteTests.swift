@@ -16,19 +16,19 @@ final class DeleteTests: TetsCase {
             let user = User(id: id)
             user.email = email
 
-            try user.put().wait()
+            try client.put(user).wait()
             sleep(1)
         }
 
         // Test
         do {
-            try UserKey(id: id).delete().wait()
+            try client.delete(UserKey(id: id)).wait()
             sleep(1)
         }
 
         // Post-conditions
         do {
-            let userMaybe: User? = try UserKey(id: id).get().wait()
+            let userMaybe: User? = try client.get(UserKey(id: id)).wait()
             XCTAssertNil(userMaybe, "User has not been deleted")
         }
     }

@@ -24,6 +24,13 @@ public struct Query<Entity: GoogleCloudDatastore.Entity> {
     }
 }
 
+extension Client {
+
+    public func query<Entity>(_ type: Entity.Type, namespace: Namespace = .default) -> Query<Entity> where Entity: GoogleCloudDatastore.Entity, Entity.Key: GoogleCloudDatastore.Key {
+        Query(client: self, namespace: namespace, mirrorableEntity: Entity.init(key: .emptyPropertyValue))
+    }
+}
+
 // MARK: File-private
 
 extension Query where Entity.Key: GoogleCloudDatastore.Key {
@@ -173,7 +180,7 @@ extension Query where Entity.Key: GoogleCloudDatastore.Key {
 
     public func getAll(limit: Int32? = nil) -> EventLoopFuture<[Entity]> {
         let request = Google_Datastore_V1_RunQueryRequest.with {
-            $0.projectID = client.projectID
+            $0.projectID = client.datastore.projectID
             $0.partitionID = .with {
                 $0.namespaceID = namespace.rawValue
             }
@@ -207,19 +214,16 @@ extension Query where Entity.Key: GoogleCloudDatastore.Key {
             })
         }
 
-        return client.raw.runQuery(request).response.flatMapThrowing { response in
-            return try response.batch.entityResults.map { try Entity.init(raw: $0.entity) }
-        }
+        return client.datastore.raw
+            .runQuery(request)
+            .response
+            .hop(to: client.eventLoop)
+            .flatMapThrowing {
+                try $0.batch.entityResults.map { try Entity.init(raw: $0.entity) }
+            }
     }
 
     public func get() -> EventLoopFuture<Entity?>  {
         getAll(limit: 1).map { $0.first }
-    }
-}
-
-extension Entity where Key: GoogleCloudDatastore.Key {
-
-    public static func query(namespace: Namespace = .default, client: Client = .default) -> Query<Self> {
-        Query(client: client, namespace: .default, mirrorableEntity: Self.init(key: .emptyPropertyValue))
     }
 }
