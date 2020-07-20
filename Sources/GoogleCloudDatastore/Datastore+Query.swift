@@ -26,7 +26,7 @@ public struct Query<Entity: GoogleCloudDatastore.Entity> {
 
 extension Datastore {
 
-    public func query<Entity>(_ type: Entity.Type, namespace: Namespace = .default) -> Query<Entity> where Entity: GoogleCloudDatastore.Entity, Entity.Key: GoogleCloudDatastore.Key {
+    public func query<Entity>(_ type: Entity.Type, namespace: Namespace) -> Query<Entity> where Entity: GoogleCloudDatastore.Entity, Entity.Key: GoogleCloudDatastore.Key {
         Query(client: self, namespace: namespace, mirrorableEntity: Entity.init(key: .emptyPropertyValue))
     }
 }

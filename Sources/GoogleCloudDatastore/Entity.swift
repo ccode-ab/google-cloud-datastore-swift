@@ -17,14 +17,14 @@ extension Google_Datastore_V1_Entity: _RawEntity {}
 
 extension Entity where Key: GoogleCloudDatastore.Key, Key.Parent == Void {
 
-    public init(id: ID = .incomplete, namespace: Namespace = .default) {
+    public init(id: ID = .incomplete, namespace: Namespace) {
         self.init(key: Key.init(id: id, parent: (), namespace: namespace))
     }
 }
 
 extension Entity where Key: GoogleCloudDatastore.Key, Key.Parent: GoogleCloudDatastore.Key {
 
-    public init(id: ID = .incomplete, parent: Key.Parent, namespace: Namespace = .default) {
+    public init(id: ID = .incomplete, parent: Key.Parent, namespace: Namespace) {
         self.init(key: Key.init(id: id, parent: parent, namespace: namespace))
     }
 }

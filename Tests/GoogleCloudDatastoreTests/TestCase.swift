@@ -20,7 +20,7 @@ class DatastoreTestCase: XCTestCase {
         datastore = driver.datastore(on: eventLoopGroup.next())
 
         // Delete datastore test-entities
-        let users = try! datastore.query(User.self).getAll().wait()
+        let users = try! datastore.query(User.self, namespace: .default).getAll().wait()
         try! datastore.deleteAll(users).wait()
 
         sleep(1)

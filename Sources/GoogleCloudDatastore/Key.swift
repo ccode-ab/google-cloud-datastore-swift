@@ -21,7 +21,7 @@ extension Google_Datastore_V1_Key.PathElement: _RawKeyElement {}
 
 extension Key where Parent == Void {
 
-    public init(id: ID, namespace: Namespace = .default) {
+    public init(id: ID, namespace: Namespace) {
         self.init(id: id, parent: (), namespace: namespace)
     }
 }
@@ -76,7 +76,7 @@ extension Key where Parent == Void {
 
     /// Default implementation of `PropertyValue`. Do not overwrite or call directly.
     public static var _gcdtc: Self {
-        Self.init(id: .uniq(1))
+        Self.init(id: .uniq(1), namespace: .default)
     }
 }
 

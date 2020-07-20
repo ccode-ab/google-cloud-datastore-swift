@@ -13,7 +13,7 @@ final class PutTests: DatastoreTestCase {
 
         // Test
         do {
-            let user = User(id: id)
+            let user = User(id: id, namespace: .default)
             user.email = email
 
             try datastore.put(user).wait()
@@ -21,7 +21,7 @@ final class PutTests: DatastoreTestCase {
 
         // Post-conditions
         do {
-            let userMaybe: User? = try datastore.get(UserKey(id: id)).wait()
+            let userMaybe: User? = try datastore.get(UserKey(id: id, namespace: .default)).wait()
 
             let user = try XCTUnwrap(userMaybe, "User does not exist after put")
             XCTAssertEqual(user.email, email, "User email is incorrect")

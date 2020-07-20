@@ -15,10 +15,10 @@ final class QueryTests: DatastoreTestCase {
 
         // Set up
         do {
-            let user1 = User(id: id1)
+            let user1 = User(id: id1, namespace: .default)
             user1.email = email1
 
-            let user2 = User(id: id2)
+            let user2 = User(id: id2, namespace: .default)
             user2.email = email2
 
             try datastore.putAll([user1, user2]).wait()
@@ -27,7 +27,7 @@ final class QueryTests: DatastoreTestCase {
 
         // Test
         do {
-            let users = try datastore.query(User.self).getAll().wait()
+            let users = try datastore.query(User.self, namespace: .default).getAll().wait()
             XCTAssertEqual(users.count, 2, "Number of uers in datastore is incorrect")
 
             let user1 = try XCTUnwrap(users.first, "User 1 does not exist")
@@ -46,10 +46,10 @@ final class QueryTests: DatastoreTestCase {
 
         // Set up
         do {
-            let user1 = User(id: id1)
+            let user1 = User(id: id1, namespace: .default)
             user1.email = email1
 
-            let user2 = User(id: id2)
+            let user2 = User(id: id2, namespace: .default)
             user2.email = email2
 
             try datastore.putAll([user1, user2]).wait()
@@ -58,7 +58,7 @@ final class QueryTests: DatastoreTestCase {
 
         // Test
         do {
-            let users = try datastore.query(User.self)
+            let users = try datastore.query(User.self, namespace: .default)
                 .where(\.email, .equals(email2))
                 .getAll()
                 .wait()
