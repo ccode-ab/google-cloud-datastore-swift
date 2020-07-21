@@ -2,7 +2,7 @@ import Foundation
 
 /// Identifier for `Key`.
 /// Can be an auto-allocated number ID, a named string ID or incomplete, future to be number ID.
-public enum ID: Equatable, CustomDebugStringConvertible, Codable {
+public enum ID: Equatable, CustomStringConvertible, CustomDebugStringConvertible, Codable {
 
     /// Auto-allocated ID of a entity.
     /// Never equal to zero. Values less than zero are discouraged and may not be supported in the future.
@@ -64,6 +64,19 @@ public enum ID: Equatable, CustomDebugStringConvertible, Codable {
         } catch {
             let named = try container.decode(String.self)
             self = named.isEmpty ? .incomplete : .named(named)
+        }
+    }
+
+    // MARK: - CustomStringConvertible
+
+    public var description: String {
+        switch self {
+        case .uniq(let value):
+            return String(value)
+        case .named(let value):
+            return value
+        case .incomplete:
+            return ""
         }
     }
 
